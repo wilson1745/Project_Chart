@@ -32,7 +32,7 @@ public class LineChartMarkView extends MarkerView {
    @SuppressLint("SetTextI18n")
    @Override
    public void refreshContent(Entry e, Highlight highlight) {
-      //展示自定义X轴值 后的X轴内容
+      //展示自訂X軸值 後的X軸內容
       tvDate.setText(xAxisValueFormatter.getFormattedValue(e.getX(), null));
       tvValue.setText("我的收益：" + df.format(e.getY() * 100) + "%");
       super.refreshContent(e, highlight);

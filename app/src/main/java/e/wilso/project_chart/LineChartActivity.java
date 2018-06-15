@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -55,6 +56,12 @@ public class LineChartActivity extends AppCompatActivity {
       setChartFillDrawable(drawable);
 
       setMarkerView();
+
+      //描述标签 Descripition Lable
+      Description description = new Description();
+      description.setText("需要展示的内容");
+      description.setEnabled(true);
+      lineChart.setDescription(description);
    }
 
    private void iniChart(LineChart lineChart) {
@@ -213,6 +220,4 @@ public class LineChartActivity extends AppCompatActivity {
       lineChart.setMarker(mv);
       lineChart.invalidate();
    }
-
 }
-
