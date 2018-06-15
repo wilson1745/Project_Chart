@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -59,6 +60,9 @@ public class IntroductionActivity extends AppCompatActivity {
 
       //Legend(曲線圖下面的 分數)
       LegendManager();
+
+      //Description(描述)
+      DescriptionManager();
    }
 
    private void XAxisManager() {
@@ -134,6 +138,18 @@ public class IntroductionActivity extends AppCompatActivity {
       legend.setWordWrapEnabled(true);
       //隱藏Lengend
       legend.setEnabled(false);
+   }
+
+   private void DescriptionManager() {
+      Description description = new Description();
+      //隱藏描述
+      //description.setEnabled(false);
+      //設置描述內容
+      description.setText("X軸描述");
+      description.setTextColor(Color.RED);
+
+      mlineChart.setDescription(description);
+
    }
 
 }
