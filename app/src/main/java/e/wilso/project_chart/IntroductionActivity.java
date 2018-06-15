@@ -55,7 +55,7 @@ public class IntroductionActivity extends AppCompatActivity {
       XAxisManager();
 
       //YAxis(Y軸)
-      //YAxisManager();
+      YAxisManager();
 
       //Legend(曲線圖下面的 分數)
       //LegendManager();
