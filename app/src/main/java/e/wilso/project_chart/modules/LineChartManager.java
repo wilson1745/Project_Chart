@@ -1,9 +1,4 @@
-package e.wilso.project_chart;
-
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+package e.wilso.project_chart.modules;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -17,46 +12,40 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import e.wilso.project_chart.modules.IncomeBean;
-import e.wilso.project_chart.modules.LineChartBean;
-import e.wilso.project_chart.modules.LocalJsonAnalyzeUtil;
+public class LineChartManager {
 
-public class LineChartActivity extends AppCompatActivity {
 
    private LineChart lineChart;
-   private XAxis xAxis;                //X軸
-   private YAxis leftYAxis;            //左側Y軸
-   private YAxis rightYaxis;           //右側Y軸
-   private Legend legend;              //圖例
-   private LimitLine limitLine;        //限制線
-   //private MyMarkerView markerView;  //標記視圖 即點擊xy軸交點時彈出展示資訊的View 需自訂
+   private XAxis xAxis;
+   private YAxis leftYAxis, rightYaxis;
+   private Legend legend;
+   private LimitLine limitLine;
 
-   @Override
-   protected void onCreate(@Nullable Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      setContentView(R.layout.activity_line_chart);
+   //private MyMarkerView markerView; //標記視圖即點擊xy軸交點時彈出展示資訊的查看需自定義
 
-      lineChart = findViewById(R.id.lineChart);
-      iniChart(lineChart);
 
-      LineChartBean lineChartBean = LocalJsonAnalyzeUtil.JsonToObject(this, "chart.json", LineChartBean.class);
-      List<IncomeBean> list = lineChartBean.getGRID0().getResult().getClientAccumulativeRate();
-      showLineChart(list, "我的收益", Color.CYAN);
+   public LineChartManager(LineChart lineChart) {
+      this.lineChart = lineChart;
+
+      leftYAxis = lineChart.getAxisLeft();
+      rightYaxis = lineChart.getAxisRight();
+      xAxis = lineChart.getXAxis();
+
+      //初始化圖表
+      initChart(lineChart);
    }
 
-   private void iniChart(LineChart lineChart) {
-      /***圖表設置***/
-      //是否展示格線
+   private void initChart(LineChart lineChart) {
+      /***图表设置***/
+      //是否展示网格线
       lineChart.setDrawGridBackground(false);
-      lineChart.setBackgroundColor(Color.WHITE);
-      //是否顯示邊界
+      //是否显示边界
       lineChart.setDrawBorders(true);
-      //是否可以拖動
-      //lineChart.setDragEnabled(false);
-      lineChart.setDoubleTapToZoomEnabled(false);
-      //是否有觸摸事件
+      //是否可以拖动
+      lineChart.setDragEnabled(false);
+      //是否有触摸事件
       lineChart.setTouchEnabled(true);
-      //設置XY軸動畫效果
+      //设置XY轴动画效果
       lineChart.animateY(2500);
       lineChart.animateX(1500);
 
@@ -116,7 +105,7 @@ public class LineChartActivity extends AppCompatActivity {
     * @param name     曲線名稱
     * @param color    曲線顏色
     */
-   private void showLineChart(List<IncomeBean> dataList, String name, int color) {
+   public void showLineChart(List<IncomeBean> dataList, String name, int color) {
       List<Entry> entries = new ArrayList<>();
       for (int i=0; i<dataList.size(); i++) {
          IncomeBean data = dataList.get(i);
