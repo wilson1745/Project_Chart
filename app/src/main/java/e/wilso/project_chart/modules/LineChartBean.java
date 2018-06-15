@@ -68,6 +68,7 @@ public class LineChartBean {
          }
 
          public List<IncomeBean> getClientAccumulativeRate() {
+            //Log.e("LineChartBean", "LineChartBean: " + clientAccumulativeRate);
             return clientAccumulativeRate;
          }
 

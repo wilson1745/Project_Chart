@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import e.wilso.project_chart.markerview.LineChartMarkView;
+import e.wilso.project_chart.modules.CompositeIndexBean;
 import e.wilso.project_chart.modules.DateUtil;
 import e.wilso.project_chart.modules.IncomeBean;
 import e.wilso.project_chart.modules.LineChartBean;
@@ -48,7 +49,12 @@ public class LineChartActivity extends AppCompatActivity {
       lineChart = findViewById(R.id.lineChart);
       iniChart(lineChart);
 
-      LineChartBean lineChartBean = LocalJsonAnalyzeUtil.JsonToObject(this, "chart.json", LineChartBean.class);
+      //read data from JSON
+      LineChartBean lineChartBean = LocalJsonAnalyzeUtil.JsonToObject(
+              this,
+              "chart.json",
+              LineChartBean.class);
+
       List<IncomeBean> list = lineChartBean.getGRID0().getResult().getClientAccumulativeRate();
       //showLineChart(list, "我的收益", Color.CYAN);
       showLineChart(list, "我的收益", getResources().getColor(R.color.blue));
@@ -57,11 +63,15 @@ public class LineChartActivity extends AppCompatActivity {
 
       setMarkerView();
 
-      //描述标签 Descripition Lable
+      //描述標籤 Descripition Lable
       Description description = new Description();
-      description.setText("需要展示的内容");
+      description.setText("需要展示的內容");
       description.setEnabled(true);
       lineChart.setDescription(description);
+
+      //創建第二條曲線
+      List<CompositeIndexBean> indexBeanList = lineChartBean.getGRID0().getResult().getCompositeIndexShanghai();
+      addLine(indexBeanList, "上證指數", getResources().getColor(R.color.orange));
    }
 
    private void iniChart(LineChart lineChart) {
@@ -220,4 +230,23 @@ public class LineChartActivity extends AppCompatActivity {
       lineChart.setMarker(mv);
       lineChart.invalidate();
    }
+
+   /**
+    * 添加曲線
+    */
+   public void addLine(List<CompositeIndexBean> dataList, String name, int color) {
+      List<Entry> entries = new ArrayList<>();
+
+      for (int i = 0; i < dataList.size(); i++) {
+         CompositeIndexBean data = dataList.get(i);
+         Entry entry = new Entry(i, (float) data.getRate());
+         entries.add(entry);
+      }
+      // 每一個LineDataSet代表一條線
+      LineDataSet lineDataSet = new LineDataSet(entries, name);
+      initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
+      lineChart.getLineData().addDataSet(lineDataSet);
+      lineChart.invalidate();
+   }
 }
+

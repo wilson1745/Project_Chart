@@ -27,6 +27,7 @@ public class LocalJsonAnalyzeUtil {
       } catch(IOException e) {
          e.printStackTrace();
       }
+      //Log.e(TAG, stringBuilder.toString());
       return stringBuilder.toString();
    }
 
