@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -13,10 +14,12 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import e.wilso.project_chart.modules.DateUtil;
 import e.wilso.project_chart.modules.IncomeBean;
 import e.wilso.project_chart.modules.LineChartBean;
 import e.wilso.project_chart.modules.LocalJsonAnalyzeUtil;
@@ -50,7 +53,7 @@ public class LineChartActivity extends AppCompatActivity {
       lineChart.setDrawGridBackground(false);
       lineChart.setBackgroundColor(Color.WHITE);
       //是否顯示邊界
-      lineChart.setDrawBorders(true);
+      lineChart.setDrawBorders(false);
       //是否可以拖動
       //lineChart.setDragEnabled(false);
       lineChart.setDoubleTapToZoomEnabled(false);
@@ -80,6 +83,15 @@ public class LineChartActivity extends AppCompatActivity {
       legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
       //是否繪製在圖表裡面
       legend.setDrawInside(false);
+
+      //禁止網格線
+      xAxis.setDrawGridLines(false);
+      rightYaxis.setDrawGridLines(false);
+      leftYAxis.setDrawGridLines(false);
+
+      //設置X Y軸網格線為虛線
+      leftYAxis.enableGridDashedLine(10f, 10f, 0f);
+      rightYaxis.setEnabled(false);
    }
 
    /**
@@ -116,7 +128,7 @@ public class LineChartActivity extends AppCompatActivity {
     * @param name     曲線名稱
     * @param color    曲線顏色
     */
-   private void showLineChart(List<IncomeBean> dataList, String name, int color) {
+   private void showLineChart(final List<IncomeBean> dataList, String name, int color) {
       List<Entry> entries = new ArrayList<>();
       for (int i=0; i<dataList.size(); i++) {
          IncomeBean data = dataList.get(i);
@@ -132,5 +144,27 @@ public class LineChartActivity extends AppCompatActivity {
       initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
       LineData lineData = new LineData(lineDataSet);
       lineChart.setData(lineData);
+
+      xAxis.setValueFormatter(new IAxisValueFormatter() {
+         @Override
+         public String getFormattedValue(float value, AxisBase axis) {
+            String tradeDate = dataList.get((int)value%dataList.size()).getTradeDate();
+            return DateUtil.formatDate(tradeDate);
+         }
+      });
+
+      //设置X轴分割数量
+      xAxis.setLabelCount(6, false);
+
+      //将Y轴分为 8份
+      leftYAxis.setValueFormatter(new IAxisValueFormatter() {
+         @Override
+         public String getFormattedValue(float value, AxisBase axis) {
+            return ((int)(value * 100)) + "%";
+         }
+      });
+      leftYAxis.setLabelCount(8, true);
+
+
    }
 }
