@@ -1,6 +1,7 @@
 package e.wilso.project_chart;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +48,10 @@ public class LineChartActivity extends AppCompatActivity {
 
       LineChartBean lineChartBean = LocalJsonAnalyzeUtil.JsonToObject(this, "chart.json", LineChartBean.class);
       List<IncomeBean> list = lineChartBean.getGRID0().getResult().getClientAccumulativeRate();
-      showLineChart(list, "我的收益", Color.CYAN);
+      //showLineChart(list, "我的收益", Color.CYAN);
+      showLineChart(list, "我的收益", getResources().getColor(R.color.blue));
+      /*Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
+      setChartFillDrawable(drawable);*/
    }
 
    private void iniChart(LineChart lineChart) {
@@ -113,12 +120,28 @@ public class LineChartActivity extends AppCompatActivity {
       lineDataSet.setDrawFilled(true);
       lineDataSet.setFormLineWidth(1f);
       lineDataSet.setFormSize(15.f);
+
+      //不顯示點
+      lineDataSet.setDrawCircles(false);
+
       if (mode == null) {
          //設置曲線展示為圓滑曲線（如果不設置則默認折線）
          lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
       } else {
          lineDataSet.setMode(mode);
       }
+
+      lineDataSet.setValueFormatter(new IValueFormatter() {
+         @Override
+         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            DecimalFormat df = new DecimalFormat(".00");
+
+            return df.format(value * 100) + "%";
+         }
+      });
+
+      //不顯示值
+      lineDataSet.setDrawValues(false);
    }
 
    /**
@@ -153,10 +176,10 @@ public class LineChartActivity extends AppCompatActivity {
          }
       });
 
-      //设置X轴分割数量
+      //設置X軸分割數量
       xAxis.setLabelCount(6, false);
 
-      //将Y轴分为 8份
+      //將Y軸分為 8份
       leftYAxis.setValueFormatter(new IAxisValueFormatter() {
          @Override
          public String getFormattedValue(float value, AxisBase axis) {
@@ -164,7 +187,21 @@ public class LineChartActivity extends AppCompatActivity {
          }
       });
       leftYAxis.setLabelCount(8, true);
+   }
 
-
+   /**
+    * 設置線條填充背景顏色
+    *
+    * @param drawable
+    */
+   public void setChartFillDrawable(Drawable drawable) {
+      if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0) {
+         LineDataSet lineDataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
+         //避免在 initLineDataSet()方法中 設置了 lineDataSet.setDrawFilled(false); 而無法實現效果
+         lineDataSet.setDrawFilled(true);
+         lineDataSet.setFillDrawable(drawable);
+         lineChart.invalidate();
+      }
    }
 }
+
