@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import e.wilso.project_chart.markerview.LineChartMarkView;
 import e.wilso.project_chart.modules.DateUtil;
 import e.wilso.project_chart.modules.IncomeBean;
 import e.wilso.project_chart.modules.LineChartBean;
@@ -50,8 +51,10 @@ public class LineChartActivity extends AppCompatActivity {
       List<IncomeBean> list = lineChartBean.getGRID0().getResult().getClientAccumulativeRate();
       //showLineChart(list, "我的收益", Color.CYAN);
       showLineChart(list, "我的收益", getResources().getColor(R.color.blue));
-      /*Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
-      setChartFillDrawable(drawable);*/
+      Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
+      setChartFillDrawable(drawable);
+
+      setMarkerView();
    }
 
    private void iniChart(LineChart lineChart) {
@@ -203,5 +206,13 @@ public class LineChartActivity extends AppCompatActivity {
          lineChart.invalidate();
       }
    }
+
+   private void setMarkerView() {
+      LineChartMarkView mv = new LineChartMarkView(this, xAxis.getValueFormatter());
+      mv.setChartView(lineChart);
+      lineChart.setMarker(mv);
+      lineChart.invalidate();
+   }
+
 }
 

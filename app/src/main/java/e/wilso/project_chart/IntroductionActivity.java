@@ -21,7 +21,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import e.wilso.project_chart.modules.MyMarkerView;
+import e.wilso.project_chart.markerview.MyMarkerView;
 
 public class IntroductionActivity extends AppCompatActivity {
 

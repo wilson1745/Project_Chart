@@ -1,4 +1,4 @@
-package e.wilso.project_chart.modules;
+package e.wilso.project_chart.markerview;
 
 import android.content.Context;
 import android.widget.TextView;
