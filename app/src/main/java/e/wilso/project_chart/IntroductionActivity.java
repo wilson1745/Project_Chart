@@ -21,6 +21,8 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import e.wilso.project_chart.modules.MyMarkerView;
+
 public class IntroductionActivity extends AppCompatActivity {
 
    final String TAG = "Introduction";
@@ -44,6 +46,7 @@ public class IntroductionActivity extends AppCompatActivity {
       //設置數據
       entries = new ArrayList<>();
       for(int i=0; i<12; i++) {
+         //entries.add(new Entry(i, (float) (Math.random()) * 100));
          entries.add(new Entry(i, (float) (Math.random()) * 100));
       }
 
@@ -63,6 +66,18 @@ public class IntroductionActivity extends AppCompatActivity {
 
       //Description(描述)
       DescriptionManager();
+
+      //MarkerView可自定義，用于點擊圖標值時顯示想要的內容
+      //設置顯示MarkerView
+      MarkerViewManager();
+
+      //折線圖的線條設置
+      //設置曲線值的圓點是實心還是空心
+      lineDataSet.setDrawCircleHole(false);
+      //設置顯示值的字體大小
+      lineDataSet.setValueTextSize(9f);
+      //線模式為圓滑曲線（默認折線）
+      lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
    }
 
    private void XAxisManager() {
@@ -147,9 +162,13 @@ public class IntroductionActivity extends AppCompatActivity {
       //設置描述內容
       description.setText("X軸描述");
       description.setTextColor(Color.RED);
-
       mlineChart.setDescription(description);
-
    }
+
+   private void MarkerViewManager() {
+      MyMarkerView myMarkerView = new MyMarkerView(this);
+      mlineChart.setMarkerView(myMarkerView);
+   }
+
 
 }
