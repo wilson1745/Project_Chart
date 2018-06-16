@@ -8,12 +8,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.github.mikephil.charting.charts.LineChart;
-
 public class MainActivity extends AppCompatActivity {
 
    final String TAG = "MainActivity";
-   final String[] item = {"Introduction", "LineChart"};
+   final String[] item = {"Introduction", "LineChart", "BarChart", "PieChar"};
    Intent intent;
 
    @Override
@@ -41,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
             break;
          case 1:
             intent = new Intent(this, LineChartActivity.class);
+            startActivity(intent);
+            break;
+         case 2:
+            //intent = new Intent(this, BarChartActivity.class);
+            //startActivity(intent);
+            break;
+         case 3:
+            intent = new Intent(this, PieChartActivity.class);
             startActivity(intent);
             break;
          default:
