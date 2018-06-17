@@ -21,7 +21,8 @@
         <activity android:name=".BarChartActivity" />
         <activity android:name=".PieChartActivity" />
         <activity android:name=".tutorial.LineTutorialActivity" />
-        <activity android:name=".tutorial.PieTutorialActivity"></activity>
+        <activity android:name=".tutorial.PieTutorialActivity" />
+        <activity android:name=".tutorial.BarTutorialActivity"></activity>
     </application>
 
 </manifest>

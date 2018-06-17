@@ -8,13 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import e.wilso.project_chart.tutorial.BarTutorialActivity;
 import e.wilso.project_chart.tutorial.LineTutorialActivity;
 import e.wilso.project_chart.tutorial.PieTutorialActivity;
 
 public class MainActivity extends AppCompatActivity {
 
    final String TAG = "MainActivity";
-   final String[] item = {"Introduction", "LineChart Tutorial", "LineChart", "BarChart", "PieChart Tutorial", "PieChar"};
+   final String[] item = {"Introduction", "LineChart Tutorial", "LineChart", "BarChart Tutorial", "BarChart", "PieChart Tutorial", "PieChar"};
    Intent intent;
 
    @Override
@@ -31,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
             action(position);
          }
       });
-
    }
 
    private void action(int position) {
@@ -49,14 +49,18 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             break;
          case 3:
+            intent = new Intent(this, BarTutorialActivity.class);
+            startActivity(intent);
+            break;
+         case 4:
             //intent = new Intent(this, BarChartActivity.class);
             //startActivity(intent);
             break;
-         case 4:
+         case 5:
             intent = new Intent(this, PieTutorialActivity.class);
             startActivity(intent);
             break;
-         case 5:
+         case 6:
             intent = new Intent(this, PieChartActivity.class);
             startActivity(intent);
             break;
