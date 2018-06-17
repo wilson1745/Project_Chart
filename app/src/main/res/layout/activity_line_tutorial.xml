@@ -6,4 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".LineTutorialActivity">
 
+    <com.github.mikephil.charting.charts.LineChart>
+
+
+
+    </com.github.mikephil.charting.charts.LineChart>>
+
 </android.support.constraint.ConstraintLayout>
