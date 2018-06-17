@@ -19,7 +19,9 @@
         <activity android:name=".IntroductionActivity" />
         <activity android:name=".LineChartActivity" />
         <activity android:name=".BarChartActivity" />
-        <activity android:name=".PieChartActivity"></activity>
+        <activity android:name=".PieChartActivity" />
+        <activity android:name=".LineTutorialActivity" />
+        <activity android:name=".PieTutorialActivity"></activity>
     </application>
 
 </manifest>

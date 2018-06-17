@@ -11,7 +11,7 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity {
 
    final String TAG = "MainActivity";
-   final String[] item = {"Introduction", "LineChart", "BarChart", "PieChar"};
+   final String[] item = {"Introduction", "LineChart Tutorial", "LineChart", "BarChart", "PieChar"};
    Intent intent;
 
    @Override
@@ -42,10 +42,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             break;
          case 2:
+            intent = new Intent(this, LineChartActivity.class);
+            startActivity(intent);
+            break;
+         case 3:
             //intent = new Intent(this, BarChartActivity.class);
             //startActivity(intent);
             break;
-         case 3:
+         case 4:
             intent = new Intent(this, PieChartActivity.class);
             startActivity(intent);
             break;
