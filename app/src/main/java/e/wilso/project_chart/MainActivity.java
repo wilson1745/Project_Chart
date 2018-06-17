@@ -8,10 +8,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import e.wilso.project_chart.tutorial.LineTutorialActivity;
+import e.wilso.project_chart.tutorial.PieTutorialActivity;
+
 public class MainActivity extends AppCompatActivity {
 
    final String TAG = "MainActivity";
-   final String[] item = {"Introduction", "Line Tutorial", "LineChart", "BarChart", "Pie Tutorial", "PieChar"};
+   final String[] item = {"Introduction", "LineChart Tutorial", "LineChart", "BarChart", "PieChart Tutorial", "PieChar"};
    Intent intent;
 
    @Override

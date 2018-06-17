@@ -4,11 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LineTutorialActivity">
+    tools:context=".tutorial.LineTutorialActivity">
 
-    <com.github.mikephil.charting.charts.LineChart>
-
-
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/linechart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="371dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints">
 
     </com.github.mikephil.charting.charts.LineChart>>
 

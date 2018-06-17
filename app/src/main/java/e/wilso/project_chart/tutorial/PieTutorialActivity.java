@@ -1,4 +1,4 @@
-package e.wilso.project_chart;
+package e.wilso.project_chart.tutorial;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -14,9 +14,12 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
+import e.wilso.project_chart.R;
+
 public class PieTutorialActivity extends AppCompatActivity {
 
    PieChart pieChart;
+   String[] nation = new String[] {"Bangladesh", "USA", "UK", "India", "Russia", "Japan"};
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +42,17 @@ public class PieTutorialActivity extends AppCompatActivity {
 
       //儲存資料
       ArrayList<PieEntry> yValues = new ArrayList<>();
-      yValues.add(new PieEntry(34f, "Bangladesh"));
+      for(int i=0;i<nation.length;i++) {
+         float ran = (float) (Math.random()*100+1);
+         yValues.add(new PieEntry(ran, nation[i].toString()));
+      }
+
+      /*yValues.add(new PieEntry(34f, "Bangladesh"));
       yValues.add(new PieEntry(23f, "USA"));
       yValues.add(new PieEntry(14f, "UK"));
       yValues.add(new PieEntry(35f, "India"));
       yValues.add(new PieEntry(40f, "Russia"));
-      yValues.add(new PieEntry(23f, "Japan"));
+      yValues.add(new PieEntry(23f, "Japan"));*/
 
       //set description
       Description description = new Description();

@@ -20,8 +20,8 @@
         <activity android:name=".LineChartActivity" />
         <activity android:name=".BarChartActivity" />
         <activity android:name=".PieChartActivity" />
-        <activity android:name=".LineTutorialActivity" />
-        <activity android:name=".PieTutorialActivity"></activity>
+        <activity android:name=".tutorial.LineTutorialActivity" />
+        <activity android:name=".tutorial.PieTutorialActivity"></activity>
     </application>
 
 </manifest>
