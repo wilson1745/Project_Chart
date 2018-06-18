@@ -1,6 +1,9 @@
-package e.wilso.project_chart.modules;
+package e.wilso.project_chart.data;
 
 import java.util.List;
+
+import e.wilso.project_chart.modules.CompositeIndexBean;
+import e.wilso.project_chart.modules.IncomeBean;
 
 public class LineChartBean {
 

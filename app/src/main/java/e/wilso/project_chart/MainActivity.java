@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             break;
          case 4:
-            //intent = new Intent(this, BarChartActivity.class);
-            //startActivity(intent);
+            intent = new Intent(this, BarChartActivity.class);
+            startActivity(intent);
             break;
          case 5:
             intent = new Intent(this, PieTutorialActivity.class);

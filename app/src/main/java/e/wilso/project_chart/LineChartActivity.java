@@ -1,252 +1,122 @@
 package e.wilso.project_chart;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import e.wilso.project_chart.markerview.LineChartMarkView;
+import e.wilso.project_chart.data.LineChartBean;
+import e.wilso.project_chart.manager.LineChartManager;
 import e.wilso.project_chart.modules.CompositeIndexBean;
-import e.wilso.project_chart.modules.DateUtil;
 import e.wilso.project_chart.modules.IncomeBean;
-import e.wilso.project_chart.modules.LineChartBean;
-import e.wilso.project_chart.modules.LocalJsonAnalyzeUtil;
+import e.wilso.project_chart.utils.LocalJsonAnalyzeUtil;
 
 public class LineChartActivity extends AppCompatActivity {
 
-   private LineChart lineChart;
-   private XAxis xAxis;                //X軸
-   private YAxis leftYAxis;            //左側Y軸
-   private YAxis rightYaxis;           //右側Y軸
-   private Legend legend;              //圖例
-   private LimitLine limitLine;        //限制線
-   //private MyMarkerView markerView;  //標記視圖 即點擊xy軸交點時彈出展示資訊的View 需自訂
+   private LineChartBean lineChartBean;
+   private List<IncomeBean> incomeBeanList;//個人收益
+   private List<CompositeIndexBean> shanghai;//滬市指數
+   private List<CompositeIndexBean> shenzheng;//深市指數
+   private List<CompositeIndexBean> GEM;//創業板指數
+
+   private LineChart lineChart1;
+
+   private ConstraintLayout cl_shanghai;
+   private View view_shanghai;
+   private ConstraintLayout cl_shenzhen;
+   private View view_shenzhen;
+   private ConstraintLayout cl_gem;
+   private View view_gem;
+
+   private LineChartManager lineChartManager1;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_line_chart);
 
-      lineChart = findViewById(R.id.lineChart);
-      iniChart(lineChart);
+      initData();
+      initView();
 
-      //read data from JSON
-      LineChartBean lineChartBean = LocalJsonAnalyzeUtil.JsonToObject(
-              this,
-              "chart.json",
-              LineChartBean.class);
+      //開場動畫
+      lineChart1.animateY(1000, Easing.EasingOption.EaseInOutCirc);
+   }
 
-      List<IncomeBean> list = lineChartBean.getGRID0().getResult().getClientAccumulativeRate();
-      //showLineChart(list, "我的收益", Color.CYAN);
-      showLineChart(list, "我的收益", getResources().getColor(R.color.blue));
+   private void initData() {
+      //獲取資料
+      lineChartBean = LocalJsonAnalyzeUtil.JsonToObject(this, "chart.json", LineChartBean.class);
+      incomeBeanList = lineChartBean.getGRID0().getResult().getClientAccumulativeRate();
+
+      shanghai = lineChartBean.getGRID0().getResult().getCompositeIndexShanghai();
+      shenzheng = lineChartBean.getGRID0().getResult().getCompositeIndexShenzhen();
+      GEM = lineChartBean.getGRID0().getResult().getCompositeIndexGEM();
+   }
+
+   private void initView() {
+      lineChart1 = findViewById(R.id.lineChart);
+      lineChartManager1 = new LineChartManager(lineChart1);
+
+      cl_shanghai = findViewById(R.id.cl_shanghai);
+      view_shanghai = findViewById(R.id.view_shanghai);
+      cl_shanghai.setOnClickListener(listener);
+
+      cl_shenzhen = findViewById(R.id.cl_shenzhen);
+      view_shenzhen = findViewById(R.id.view_shenzhen);
+      cl_shenzhen.setOnClickListener(listener);
+
+      cl_gem = findViewById(R.id.cl_gem);
+      view_gem = findViewById(R.id.view_gem);
+      cl_gem.setOnClickListener(listener);
+
+      //展示圖表
+      lineChartManager1.showLineChart(incomeBeanList, "我的收益", getResources().getColor(R.color.blue));
+      lineChartManager1.addLine(shanghai, "上證指數", getResources().getColor(R.color.orange));
+
+      //設置曲線填充色 以及 MarkerView
       Drawable drawable = getResources().getDrawable(R.drawable.fade_blue);
-      setChartFillDrawable(drawable);
-
-      setMarkerView();
-
-      //描述標籤 Descripition Lable
-      Description description = new Description();
-      description.setText("需要展示的內容");
-      description.setEnabled(true);
-      lineChart.setDescription(description);
-
-      //創建第二條曲線
-      List<CompositeIndexBean> indexBeanList = lineChartBean.getGRID0().getResult().getCompositeIndexShanghai();
-      addLine(indexBeanList, "上證指數", getResources().getColor(R.color.orange));
+      lineChartManager1.setChartFillDrawable(drawable);
+      lineChartManager1.setMarkerView(this);
    }
 
-   private void iniChart(LineChart lineChart) {
-      /***圖表設置***/
-      //是否展示格線
-      lineChart.setDrawGridBackground(false);
-      lineChart.setBackgroundColor(Color.WHITE);
-      //是否顯示邊界
-      lineChart.setDrawBorders(false);
-      //是否可以拖動
-      //lineChart.setDragEnabled(false);
-      lineChart.setDoubleTapToZoomEnabled(false);
-      //是否有觸摸事件
-      lineChart.setTouchEnabled(true);
-      //設置XY軸動畫效果
-      lineChart.animateY(2500);
-      lineChart.animateX(1500);
+   View.OnClickListener listener = new View.OnClickListener() {
+      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+      @Override
+      public void onClick(View view) {
+         switch (view.getId()) {
+            case R.id.cl_shanghai:
+               view_shanghai.setBackground(getResources().getDrawable(R.drawable.shape_round_orange));
 
-      /***XY軸的設置***/
-      xAxis = lineChart.getXAxis();
-      leftYAxis = lineChart.getAxisLeft();
-      rightYaxis = lineChart.getAxisRight();
-      //X軸設置顯示位置在底部
-      xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-      xAxis.setAxisMinimum(0f);
-      xAxis.setGranularity(1f);
+               view_gem.setBackground(getResources().getDrawable(R.drawable.shape_round_gray));
+               view_shenzhen.setBackground(getResources().getDrawable(R.drawable.shape_round_gray));
 
-      /***折線圖例 標籤 設置***/
-      legend = lineChart.getLegend();
-      //設置顯示類型，LINE CIRCLE SQUARE EMPTY 等等 多種方式，查看LegendForm 即可
-      legend.setForm(Legend.LegendForm.LINE);
-      legend.setTextSize(12f);
-      //顯示位置 左下方
-      legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-      legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-      legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-      //是否繪製在圖表裡面
-      legend.setDrawInside(false);
+               lineChartManager1.resetLine(1, shanghai, "上證指數", getResources().getColor(R.color.orange));
+               break;
+            case R.id.cl_shenzhen:
+               view_shenzhen.setBackground(getResources().getDrawable(R.drawable.shape_round_orange));
 
-      //禁止網格線
-      xAxis.setDrawGridLines(false);
-      rightYaxis.setDrawGridLines(false);
-      leftYAxis.setDrawGridLines(false);
+               view_gem.setBackground(getResources().getDrawable(R.drawable.shape_round_gray));
+               view_shanghai.setBackground(getResources().getDrawable(R.drawable.shape_round_gray));
 
-      //設置X Y軸網格線為虛線
-      leftYAxis.enableGridDashedLine(10f, 10f, 0f);
-      rightYaxis.setEnabled(false);
-   }
+               lineChartManager1.resetLine(1, shenzheng, "深證指數", getResources().getColor(R.color.orange));
+               break;
+            case R.id.cl_gem:
+               view_gem.setBackground(getResources().getDrawable(R.drawable.shape_round_orange));
+               view_shanghai.setBackground(getResources().getDrawable(R.drawable.shape_round_gray));
+               view_shenzhen.setBackground(getResources().getDrawable(R.drawable.shape_round_gray));
 
-   /**
-    * 曲線初始化設置 一個LineDataSet 代表一條曲線
-    *
-    * @param lineDataSet 線條
-    * @param color       線條顏色
-    * @param mode
-    */
-   private void initLineDataSet(LineDataSet lineDataSet, int color, LineDataSet.Mode mode) {
-      lineDataSet.setColor(color);
-      lineDataSet.setCircleColor(color);
-      lineDataSet.setLineWidth(1f);
-      lineDataSet.setCircleRadius(3f);
-      //設置曲線值的圓點是實心還是空心
-      lineDataSet.setDrawCircleHole(false);
-      lineDataSet.setValueTextSize(10f);
-      //設置折線圖填充
-      lineDataSet.setDrawFilled(true);
-      lineDataSet.setFormLineWidth(1f);
-      lineDataSet.setFormSize(15.f);
-
-      //不顯示點
-      lineDataSet.setDrawCircles(false);
-
-      if (mode == null) {
-         //設置曲線展示為圓滑曲線（如果不設置則默認折線）
-         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-      } else {
-         lineDataSet.setMode(mode);
-      }
-
-      lineDataSet.setValueFormatter(new IValueFormatter() {
-         @Override
-         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            DecimalFormat df = new DecimalFormat(".00");
-
-            return df.format(value * 100) + "%";
+               lineChartManager1.resetLine(1, GEM, "創業指數", getResources().getColor(R.color.orange));
+               break;
          }
-      });
-
-      //不顯示值
-      lineDataSet.setDrawValues(false);
-   }
-
-   /**
-    * 展示曲線
-    *
-    * @param dataList 資料集合
-    * @param name     曲線名稱
-    * @param color    曲線顏色
-    */
-   private void showLineChart(final List<IncomeBean> dataList, String name, int color) {
-      List<Entry> entries = new ArrayList<>();
-      for (int i=0; i<dataList.size(); i++) {
-         IncomeBean data = dataList.get(i);
-         /**
-          * 在此可查看 Entry構造方法，可發現 可傳入數值 Entry(float x, float y)
-          * 也可傳入Drawable， Entry(float x, float y, Drawable icon) 可在XY軸交點 設置Drawable圖像展示
-          */
-         Entry entry = new Entry(i, (float) data.getValue());
-         entries.add(entry);
       }
-      // 每一個LineDataSet代表一條線
-      LineDataSet lineDataSet = new LineDataSet(entries, name);
-      initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
-      LineData lineData = new LineData(lineDataSet);
-      lineChart.setData(lineData);
-
-      xAxis.setValueFormatter(new IAxisValueFormatter() {
-         @Override
-         public String getFormattedValue(float value, AxisBase axis) {
-            String tradeDate = dataList.get((int)value%dataList.size()).getTradeDate();
-            return DateUtil.formatDate(tradeDate);
-         }
-      });
-
-      //設置X軸分割數量
-      xAxis.setLabelCount(6, false);
-
-      //將Y軸分為 8份
-      leftYAxis.setValueFormatter(new IAxisValueFormatter() {
-         @Override
-         public String getFormattedValue(float value, AxisBase axis) {
-            return ((int)(value * 100)) + "%";
-         }
-      });
-      leftYAxis.setLabelCount(8, true);
-   }
-
-   /**
-    * 設置線條填充背景顏色
-    *
-    * @param drawable
-    */
-   public void setChartFillDrawable(Drawable drawable) {
-      if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0) {
-         LineDataSet lineDataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
-         //避免在 initLineDataSet()方法中 設置了 lineDataSet.setDrawFilled(false); 而無法實現效果
-         lineDataSet.setDrawFilled(true);
-         lineDataSet.setFillDrawable(drawable);
-         lineChart.invalidate();
-      }
-   }
-
-   private void setMarkerView() {
-      LineChartMarkView mv = new LineChartMarkView(this, xAxis.getValueFormatter());
-      mv.setChartView(lineChart);
-      lineChart.setMarker(mv);
-      lineChart.invalidate();
-   }
-
-   /**
-    * 添加曲線
-    */
-   public void addLine(List<CompositeIndexBean> dataList, String name, int color) {
-      List<Entry> entries = new ArrayList<>();
-
-      for (int i = 0; i < dataList.size(); i++) {
-         CompositeIndexBean data = dataList.get(i);
-         Entry entry = new Entry(i, (float) data.getRate());
-         entries.add(entry);
-      }
-      // 每一個LineDataSet代表一條線
-      LineDataSet lineDataSet = new LineDataSet(entries, name);
-      initLineDataSet(lineDataSet, color, LineDataSet.Mode.LINEAR);
-      lineChart.getLineData().addDataSet(lineDataSet);
-      lineChart.invalidate();
-   }
+   };
 }
 

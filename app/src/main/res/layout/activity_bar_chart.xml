@@ -18,5 +18,6 @@
             android:id="@+id/bar_chart2"
             android:layout_width="match_parent"
             android:layout_height="380dp"/>
+
     </LinearLayout>
 </ScrollView>

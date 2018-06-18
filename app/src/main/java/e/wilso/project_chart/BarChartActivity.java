@@ -24,13 +24,13 @@ public class BarChartActivity extends AppCompatActivity {
       BarChartManager barChartManager1 = new BarChartManager(barChart1);
       BarChartManager barChartManager2 = new BarChartManager(barChart2);
 
-      //设置x轴的数据
+      //設置x軸的數據
       ArrayList<Float> xValues = new ArrayList<>();
       for (int i = 0; i <= 10; i++) {
          xValues.add((float) i);
       }
 
-      //设置y轴的数据()
+      //設置y軸的數據()
       List<List<Float>> yValues = new ArrayList<>();
       for (int i = 0; i < 4; i++) {
          List<Float> yValue = new ArrayList<>();
@@ -40,21 +40,21 @@ public class BarChartActivity extends AppCompatActivity {
          yValues.add(yValue);
       }
 
-      //颜色集合
+      //顏色集合
       List<Integer> colours = new ArrayList<>();
       colours.add(Color.GREEN);
       colours.add(Color.BLUE);
       colours.add(Color.RED);
       colours.add(Color.CYAN);
 
-      //线的名字集合
+      //線的名字集合
       List<String> names = new ArrayList<>();
-      names.add("折线一");
-      names.add("折线二");
-      names.add("折线三");
-      names.add("折线四");
+      names.add("折線一");
+      names.add("折線二");
+      names.add("折線三");
+      names.add("折線四");
 
-      //创建多条折线的图表
+      //創建多條折線的圖表
       barChartManager1.showBarChart(xValues, yValues.get(0), names.get(1), colours.get(3));
       barChartManager2.showBarChart(xValues, yValues, names, colours);
       barChartManager2.setXAxis(11f, 0f, 11);

@@ -1,4 +1,4 @@
-package e.wilso.project_chart.modules;
+package e.wilso.project_chart.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;

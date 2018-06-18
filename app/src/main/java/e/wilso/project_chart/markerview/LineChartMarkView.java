@@ -50,7 +50,7 @@ public class LineChartMarkView extends MarkerView {
          List<ILineDataSet> dataSetList = lineData.getDataSets();
          for(int i=0; i<dataSetList.size(); i++) {
             LineDataSet dataSet = (LineDataSet) dataSetList.get(i);
-            //获取到曲线的所有在Y轴的数据集合，根据当前X轴的位置 来获取对应的Y轴值
+            //獲取到曲線的所有在Y軸的資料集合，根據當前X軸的位置 來獲取對應的Y軸值
             float y = dataSet.getValues().get((int) e.getX()).getY();
             if(i == 0) {
                tvValue.setText(dataSet.getLabel() + ": " + df.format(y * 100) + "%");
@@ -73,3 +73,4 @@ public class LineChartMarkView extends MarkerView {
    }
 
 }
+
